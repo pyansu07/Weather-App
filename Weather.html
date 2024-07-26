@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wheather-App</title>
+    <link rel="stylesheet" href="Wheather.css">
+</head>
+<body>
+    <div class="card1">
+    <div class="card">
+        <div class="video-container">
+            <video autoplay muted loop class="video-icon">
+              <!-- Replace 'your-video.mp4' with the actual path to your video file -->
+              <source src="./cloudy.mp4" type="video/mp4" >
+            </video>
+        </div>
+        <div class="search">
+            
+        <input type="text" placeholder="enter city" spellcheck="false">
+        <button><img src="./search.png"></button>
+        <!-- <div class="error">
+            <p>Invalid city name</p>
+        </div> -->
+        </div>
+        <div class="weather">
+            <img src="./drizzle.png" class="weather-icon">
+            <h1 class="temp">22°c</h1>
+            <h2 class="city">New york</h2>
+            <div class="details">
+                <div class="col1">
+                <img src="./—Pngtree—humidity vector icon_3725331.png">
+                <div>
+                    <p class="humidity">50%</p>
+                    <p>Humidity</p>
+                </div>
+               </div>
+               <!-- ////////////////////////////// -->
+               <div class="col2">
+                <img src="./—Pngtree—vector wind icon_4183797.png">
+                <div>
+                    <p class="wind">15 kmph</p>
+                    <p>Wind speed</p>
+                </div>
+               </div>
+            </div>
+
+        </div>
+
+        <div class="list_content">
+            <ul>
+              <li>
+                <img src="https://openweathermap.org/img/wn/10d@2x.png" />
+                <span>Sat</span>
+                <span class="day_temp">15°C</span>
+              </li>
+              <li>
+                <img src="https://openweathermap.org/img/wn/02d@2x.png" />
+                <span>Sat</span>
+                <span class="day_temp">10°C</span>
+              </li>
+              <li>
+                <img src="https://openweathermap.org/img/wn/13d@2x.png" />
+                <span>Sat</span>
+                <span class="day_temp">13°C</span>
+              </li>
+              <li>
+                <img src="https://openweathermap.org/img/wn/03d@2x.png" />
+                <span>Sat</span>
+                <span class="day_temp">18°C</span>
+              </li>
+            </ul>
+          </div>
+    </div>
+</div>
+    <!-- //////////////////////////////////////////// -->
+
+    <script>
+        const searchBox=document.querySelector(".search input");
+        const searchBtn=document.querySelector(".search button");
+        const weatherIcon=document.querySelector(".weather-icon");
+        const video=document.querySelector(".video-container");
+        const videoIcon=document.querySelector(".video-icon");
+
+        const apikey="df077af5a5e1a5b67d2fed8b4ca8490a";
+        const apiurl="https://api.openweathermap.org/data/2.5/weather?units=metric&q=";
+        async function checkweather(city){
+            const response=await fetch(apiurl +city+ `&appid=${apikey}`);
+
+            if(response.status==404){
+                document.querySelector(".error").style.display="block";
+                document.querySelector(".weather").style.display="none";
+            }
+
+            else{
+                var data=await response.json();
+
+            console.log(data);
+            document.querySelector(".city").innerHTML=data.name;
+            document.querySelector(".temp").innerHTML=Math.round(data.main.temp) + "°c";
+            document.querySelector(".humidity").innerHTML=data.main.humidity+"%";
+            document.querySelector(".wind").innerHTML=data.wind.speed+"kmph";
+
+            if(Math.round(data.main.temp)<0){
+                video.style.display="block";
+                videoIcon.src="./snowy.mp4";
+                video.play();
+            }
+            else if(data.weather[0].main=="Clouds"){
+                weatherIcon.src="./clouds.png";
+                video.style.display="block";
+                videoIcon.src="./cloudy.mp4";
+                video.play();
+            }
+            else if(data.weather[0].main=="Clear"){
+                weatherIcon.src="./clear.png";
+                video.style.display="block";
+                videoIcon.src="./clearr.mp4";
+                video.play();
+                
+            }
+            else if(data.weather[0].main=="Rain"){
+                weatherIcon.src="./rain.png";
+                video.style.display="block";
+                videoIcon.src="./rainy.mp4";
+                video.play();
+            }
+            else if(data.weather[0].main=="Drizzle"){
+                weatherIcon.src="./drizzle.png";
+                video.style.display="block";
+                videoIcon.src="./drizzle.mp4";
+                video.play();
+            }
+            else if(data.weather[0].main=="Mist"){
+                weatherIcon.src="./mist.png";
+                video.style.display="block";
+                videoIcon.src="./foggy.mp4";
+                video.play();
+            }
+            document.querySelector(".error").style.display="none";
+            }
+            
+        }
+
+        searchBtn.addEventListener("click",()=>{checkweather(searchBox.value);})
+        
+    </script>
+</body>
+</html>
